@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAMD Coffee</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+<h1>HAMD Coffee</h1>
+<nav>
+<a href="#home">Home</a>
+<a href="#shop">Shop</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<section id="home" class="hero">
+<h2>Fresh Coffee. Warm Moments.</h2>
+<p>Crafted with passion, brewed to perfection.</p>
+</section>
+
+<section id="shop" class="section">
+<h2>Order Now</h2>
+<div class="products" id="productList"></div>
+
+<div class="cart">
+<h3>Cart</h3>
+<ul id="cartItems"></ul>
+<p>Total: ₱<span id="total">0</span></p>
+<button onclick="openModal()">View Bill</button>
+</div>
+
+<div class="dashboard">
+<div class="box">☕ Items Sold<br><span id="sales">0</span></div>
+<div class="box">💰 Total Revenue<br>₱<span id="revenue">0</span></div>
+</div>
+</section>
+
+<section id="contact" class="section">
+<div class="contact-banner">
+<h2>Contact Us</h2>
+<p>Email: hamdcoffee@gmail.com | Phone: 0947-354-2181</p>
+<p>Facebook: facebook.com/hamdcoffee | Location: Brgy. San Juan, Batangas City</p>
+</div>
+</section>
+
+<footer>
+<p>© 2026 HAMD Coffee</p>
+</footer>
+
+<!-- MODAL -->
+<div id="billModal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">&times;</span>
+<h2>Your Receipt</h2>
+<ul id="modalItems"></ul>
+<p>Total: ₱<span id="modalTotal">0</span></p>
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
