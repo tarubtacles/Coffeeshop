@@ -1,0 +1,97 @@
+// Products
+const products=[
+{name:"Espresso",base:100,img:"https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=400&q=80",sizes:[0,20,40]},
+{name:"Latte",base:149,img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80",sizes:[0,20,40]},
+{name:"Cappuccino",base:139,img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&q=80",sizes:[0,20,40]},
+{name:"Mocha",base:159,img:"https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=400&q=80",sizes:[0,20,40]},
+{name:"Americano",base:129,img:"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&w=400&q=80",sizes:[0,20,40]},
+{name:"Strawberry Shortcake",base:120,img:"https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&w=400&q=80",sizes:[0,20,40]},
+{name:"Banana Muffin",base:80,img:"https://images.unsplash.com/photo-1608198093002-de8b0f9d8b5b?auto=format&w=400&q=80",sizes:[0,10,20]},
+{name:"Croissant",base:90,img:"https://images.unsplash.com/photo-1589308078059-f2551a9e0aaf?auto=format&w=400&q=80",sizes:[0,10,20]},
+{name:"Blueberry Cheesecake",base:150,img:"https://images.unsplash.com/photo-1601972599720-b0c8d2c3b9e4?auto=format&w=400&q=80",sizes:[0,20,40]},
+{name:"Chocolate Fudge Cake",base:180,img:"https://images.unsplash.com/photo-1617196031710-1a4a4f8b7a45?auto=format&w=400&q=80",sizes:[0,30,50]},
+{name:"Red Velvet Cake",base:200,img:"https://images.unsplash.com/photo-1599785209793-9c318d92dbf1?auto=format&w=400&q=80",sizes:[0,30,50]},
+{name:"Matcha Green Tea Cake",base:190,img:"https://images.unsplash.com/photo-1622445938336-5a1c9e2e8d2a?auto=format&w=400&q=80",sizes:[0,30,50]}
+];
+
+let cart=[];
+let total=0;
+let sales=0;
+
+// Render products
+const productList=document.getElementById('productList');
+products.forEach((p,i)=>{
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+    ${i>=5?'<div class="spinner"></div>':''}
+    <img src="${p.img}">
+    <h3>${p.name}</h3>
+    <p class="price">Base: ₱${p.base}</p>
+    <select id="size${i}">
+      ${p.sizes.map((s,j)=>`<option value="${s}">${j===0?'Small':j===1?'Medium (+₱'+s+')':'Large (+₱'+s+')'}</option>`).join('')}
+    </select>
+    <div class="qty-container">
+      <button onclick="changeQty('qty${i}',-1)">-</button>
+      <input type="number" id="qty${i}" value="1" min="1">
+      <button onclick="changeQty('qty${i}',1)">+</button>
+    </div>
+    <button class="addBtn" onclick="addToCart(${i})">Add</button>
+  `;
+  productList.appendChild(card);
+});
+
+// Quantity +/-
+function changeQty(id,delta){
+  const input=document.getElementById(id);
+  let val=parseInt(input.value)+delta;
+  if(val<1) val=1;
+  input.value=val;
+}
+
+// Add to cart
+function addToCart(index){
+  const p=products[index];
+  const qty=parseInt(document.getElementById('qty'+index).value);
+  const sizePrice=parseInt(document.getElementById('size'+index).value);
+  const price=(p.base+sizePrice)*qty;
+
+  const existing=cart.find(c=>c.name===p.name && c.size===sizePrice);
+  if(existing){existing.qty+=qty; existing.total+=price;}
+  else{cart.push({name:p.name,qty,total:price,size:sizePrice});}
+
+  updateCart();
+}
+
+// Update cart display
+function updateCart(){
+  const ul=document.getElementById('cartItems');
+  ul.innerHTML='';
+  total=0; sales=0;
+  cart.forEach(item=>{
+    const li=document.createElement('li');
+    li.innerText=`${item.name} x${item.qty} = ₱${item.total}`;
+    ul.appendChild(li);
+    total+=item.total;
+    sales+=item.qty;
+  });
+  document.getElementById('total').innerText=total;
+  document.getElementById('sales').innerText=sales;
+  document.getElementById('revenue').innerText=total;
+}
+
+// Modal
+const modal=document.getElementById('billModal');
+function openModal(){
+  const modalUl=document.getElementById('modalItems');
+  modalUl.innerHTML='';
+  cart.forEach(i=>{
+    const li=document.createElement('li');
+    li.innerText=`${i.name} x${i.qty} = ₱${i.total}`;
+    modalUl.appendChild(li);
+  });
+  document.getElementById('modalTotal').innerText=total;
+  modal.style.display='block';
+}
+function closeModal(){modal.style.display='none';}
+window.onclick=function(e){if(e.target==modal) closeModal();}
